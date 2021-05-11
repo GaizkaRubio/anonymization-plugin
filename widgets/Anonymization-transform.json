@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "spec-version": "1.5"
+  },
+  "display-name": "Encrypt Plugin",
+  "configuration-groups": [
+    {
+      "label": "Encrypt Configuration",
+      "properties": [
+        {
+          "label": "Mode",
+          "name": "anonymizationMode",
+          "widget-type": "select",
+          "widget-attributes": {
+            "default": "Encrypt",
+            "values": ["Encrypt", "Decrypt"]
+          }
+        },
+        {
+          "label": "Encrypt Function",
+          "name": "encryptFunction",
+          "widget-type": "select",
+          "widget-attributes": {
+            "default": "Aead",
+            "values": ["Aead", "Deterministic Aead"]
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "schema",
+      "label": "schema",
+      "widget-type": "schema"
+    }
+  ]
+}
