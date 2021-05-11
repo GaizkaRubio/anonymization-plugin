@@ -10,11 +10,18 @@ import io.cdap.cdap.etl.api.Emitter;
 import io.cdap.cdap.etl.api.PipelineConfigurer;
 import io.cdap.cdap.etl.api.Transform;
 import io.cdap.cdap.etl.api.TransformContext;
+import io.vavr.control.Try;
+import org.example.hydrator.plugin.constants.Constants;
 import org.example.hydrator.plugin.tink.AeadHelper;
+import org.example.hydrator.plugin.tink.DeterAeadHelper;
 import org.example.hydrator.plugin.tink.TinkHelper;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiFunction;
+
+import static org.example.hydrator.plugin.constants.Constants.AEAD;
 
 @Plugin(type = Transform.PLUGIN_TYPE)
 @Name("AnonymizationPlugin")
@@ -25,6 +32,7 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
   private Schema outputSchema;
   private HashMap<String, byte[]> keyTypeMap = new HashMap<>();
   private TinkHelper aeadHelper = new AeadHelper();
+  private BiFunction<byte[], String, Try<byte[]>> encryptFunction;
 
   public AnonymizationPlugin(AnonymizationConfig config) {
     this.config = config;
@@ -35,8 +43,13 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
   }
 
   public void initialize(TransformContext context) throws Exception {
-    String key = "CICY4KkHEmQKWAowdHlwZS5nb29nbGVhcGlzLmNvbS9nb29nbGUuY3J5cHRvLnRpbmsuQWVzR2NtS2V5EiIaIAhE8ZwSxBQM8sbcZ9wTtYDDIoLenNaSkvgW4pR/JKnXXGAEQARiAmOCpByAB";
-    keyTypeMap.put("prueba", key.getBytes());
+    if (this.config.getEncryptFunction().equals(AEAD)) {
+      this.aeadHelper = new AeadHelper();
+    } else {
+      this.aeadHelper = new DeterAeadHelper();
+    }
+    this.encryptFunction = (key, text) -> Try.of(() -> aeadHelper.encrypt(key,text));
+    keyTypeMap.put("prueba", Constants.deterKey.getBytes());
   }
 
   @Override
@@ -46,8 +59,8 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
     for(Field field : fields) {
       String name = field.getName();
       String value = structuredRecord.get(name);
-      String newValue = aeadHelper.encrypt(keyTypeMap.get("prueba"), value).toString();
-      builder.set(name, newValue);
+      byte[] newValue = this.encryptFunction.apply(keyTypeMap.get("prueba"), value).get();
+      builder.set(name, Base64.getEncoder().encodeToString(newValue));
     }
     emitter.emit(builder.build());
   }
