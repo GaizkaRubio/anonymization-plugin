@@ -29,9 +29,16 @@ public class AnonymizationConfig extends PluginConfig {
   @Description("Specifies whether the plugin should anonymise or de-anonymise the data.")
   private final String encryptFunction;
 
-  public AnonymizationConfig(@Nullable String schema, String anonymizationMode, String encryptFunction) {
+  @Name("categoryMapping")
+  @Macro
+  @Description("Specifies how the column names are mapped to the categoriesTypes.")
+  private final String categoryConfig;
+
+  public AnonymizationConfig(@Nullable String schema, String anonymizationMode, String encryptFunction,
+                             String categoryConfig) {
     this.schema = schema;
     this.anonymizationMode = anonymizationMode;
     this.encryptFunction = encryptFunction;
+    this.categoryConfig = categoryConfig;
   }
 }

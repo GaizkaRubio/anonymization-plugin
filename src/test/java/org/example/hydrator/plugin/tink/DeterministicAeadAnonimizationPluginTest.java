@@ -17,9 +17,8 @@ public class DeterministicAeadAnonimizationPluginTest {
       Schema.Field.of("c", Schema.of(Schema.Type.STRING)),
       Schema.Field.of("d", Schema.of(Schema.Type.STRING)),
       Schema.Field.of("e", Schema.of(Schema.Type.STRING)));
-  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD);
-
-  private String base64Key = "CKSQuKwBEoQBCngKMHR5cGUuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmNyeXB0by50aW5rLkFlc1NpdktleRJCEkDCwP1yIKBD54/kMi9ijYZAgRicJgQimVoUMAGGaPKqs33608DiAEEvMp1z3qCo3oB6QKYrHHbJlxaZq0P5DTriGAEQARikkLisASAB";
+  private static String categoryMapping = "a:prueba, d:prueba, e:prueba";
+  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD, categoryMapping);
 
   @Test
   public void testDeterministicAeadAnonymizationPlugin() throws Exception {
