@@ -22,7 +22,8 @@ public class AeadAnonymizationPluginTest {
       Field.of("c", Schema.of(Schema.Type.STRING)),
       Field.of("d", Schema.of(Schema.Type.STRING)),
       Field.of("e", Schema.of(Schema.Type.STRING)));
-  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, AEAD);
+  private static String categoryMapping = "d:prueba, e:prueba";
+  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, AEAD, categoryMapping);
 
   @Test
   public void testAeadAnonymizationPlugin() throws Exception {
