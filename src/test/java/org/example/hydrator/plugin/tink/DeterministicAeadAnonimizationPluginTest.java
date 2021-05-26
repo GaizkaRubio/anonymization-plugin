@@ -20,11 +20,12 @@ public class DeterministicAeadAnonimizationPluginTest {
       Schema.Field.of("e", Schema.of(Schema.Type.STRING)));
   private static String categoryMapping = "a:prueba, d:prueba, e:prueba";
   private static String categoryKey = "prueba:" + DETERKEY;
-  private static final AnonymizationConfig config =
-      new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD, categoryMapping, categoryKey);
+
 
   @Test
   public void testDeterministicAeadAnonymizationPlugin() throws Exception {
+    AnonymizationConfig config =
+        new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD, categoryMapping, categoryKey);
     AnonymizationPlugin plugin = new AnonymizationPlugin(config);
     plugin.initialize(null);
     MockEmitter<StructuredRecord> emitter = new MockEmitter<>();
@@ -32,6 +33,27 @@ public class DeterministicAeadAnonimizationPluginTest {
       .set("a", "test").set("b", "test")
       .set("c", "test").set("d", "test")
       .set("e", "test").build(), emitter);
+    StructuredRecord out = emitter.getEmitted().stream().findFirst().get();
+    Schema outputSchema = out.getSchema();
+    for (Schema.Field field : outputSchema.getFields()) {
+      String encrypt = out.get(field.getName());
+      System.out.println(field.getName() + " : " + encrypt);
+    }
+  }
+
+  @Test
+  public void testDeterministicAeadDecryptPlugin() throws Exception {
+    AnonymizationConfig config =
+        new AnonymizationConfig(INPUT.toString(), DECRYPT, DAEAD, categoryMapping, categoryKey);
+    AnonymizationPlugin plugin = new AnonymizationPlugin(config);
+    plugin.initialize(null);
+    MockEmitter<StructuredRecord> emitter = new MockEmitter<>();
+    plugin.transform(StructuredRecord.builder(INPUT)
+        .set("a", "ARWOCCTOFO+efQEgoelDta6eOLOrdsP67A==")
+        .set("b", "test")
+        .set("c", "test")
+        .set("d", "ARWOCCTOFO+efQEgoelDta6eOLOrdsP67A==")
+        .set("e", "ARWOCCTOFO+efQEgoelDta6eOLOrdsP67A==").build(), emitter);
     StructuredRecord out = emitter.getEmitted().stream().findFirst().get();
     Schema outputSchema = out.getSchema();
     for (Schema.Field field : outputSchema.getFields()) {

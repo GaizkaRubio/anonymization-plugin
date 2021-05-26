@@ -16,11 +16,12 @@ public class DeterAeadHelper implements TinkHelper {
     return deterministicAead.encryptDeterministically(text.getBytes(), "".getBytes());
   }
 
-  public byte[] decrypt(String base64Key, String text) throws Exception {
+  public byte[] decrypt(String base64Key, String base64Text) throws Exception {
     DeterministicAeadConfig.register();
     KeysetReader reader = BinaryKeysetReader.withBytes(Base64.getDecoder().decode(base64Key));
     KeysetHandle clearSetHandle = CleartextKeysetHandle.read(reader);
     DeterministicAead deterministicAead = clearSetHandle.getPrimitive(DeterministicAead.class);
-    return deterministicAead.decryptDeterministically(text.getBytes(), "".getBytes());
+    byte[] decodeText = Base64.getDecoder().decode(base64Text);
+    return deterministicAead.decryptDeterministically(decodeText, "".getBytes());
   }
 }
