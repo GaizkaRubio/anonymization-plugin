@@ -8,7 +8,7 @@ import java.util.Base64;
 
 public class DeterAeadHelper implements TinkHelper {
 
-  public byte[] encrypt(byte[] base64Key, String text) throws Exception {
+  public byte[] encrypt(String base64Key, String text) throws Exception {
     DeterministicAeadConfig.register();
     KeysetReader reader = BinaryKeysetReader.withBytes(Base64.getDecoder().decode(base64Key));
     KeysetHandle clearSetHandle = CleartextKeysetHandle.read(reader);
@@ -16,7 +16,7 @@ public class DeterAeadHelper implements TinkHelper {
     return deterministicAead.encryptDeterministically(text.getBytes(), "".getBytes());
   }
 
-  public byte[] decrypt(byte[] base64Key, String text) throws Exception {
+  public byte[] decrypt(String base64Key, String text) throws Exception {
     DeterministicAeadConfig.register();
     KeysetReader reader = BinaryKeysetReader.withBytes(Base64.getDecoder().decode(base64Key));
     KeysetHandle clearSetHandle = CleartextKeysetHandle.read(reader);

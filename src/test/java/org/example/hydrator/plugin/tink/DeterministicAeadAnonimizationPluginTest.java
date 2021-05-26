@@ -8,6 +8,7 @@ import org.example.hydrator.plugin.AnonymizationPlugin;
 import org.junit.Test;
 
 import static org.example.hydrator.plugin.constants.Constants.*;
+import static org.example.hydrator.plugin.tink.constants.Constants.DETERKEY;
 
 public class DeterministicAeadAnonimizationPluginTest {
 
@@ -18,7 +19,9 @@ public class DeterministicAeadAnonimizationPluginTest {
       Schema.Field.of("d", Schema.of(Schema.Type.STRING)),
       Schema.Field.of("e", Schema.of(Schema.Type.STRING)));
   private static String categoryMapping = "a:prueba, d:prueba, e:prueba";
-  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD, categoryMapping);
+  private static String categoryKey = "prueba:" + DETERKEY;
+  private static final AnonymizationConfig config =
+      new AnonymizationConfig(INPUT.toString(), ENCRYPT, DAEAD, categoryMapping, categoryKey);
 
   @Test
   public void testDeterministicAeadAnonymizationPlugin() throws Exception {

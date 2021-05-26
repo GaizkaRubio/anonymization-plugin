@@ -24,6 +24,29 @@
             "default": "Aead",
             "values": ["Aead", "Deterministic Aead"]
           }
+        },
+        {
+          "label": "Field-Category",
+          "name": "categoryConfig",
+          "widget-type": "keyvalue",
+          "widget-attributes": {
+            "delimiter": ",",
+            "kv-delimiter": ":",
+            "key-placeholder": "Enter key",
+            "value-placeholder": "Enter value"
+          }
+        }
+      ,
+        {
+          "label": "Category-Key",
+          "name": "categoryKeyConfig",
+          "widget-type": "keyvalue",
+          "widget-attributes": {
+            "delimiter": ",",
+            "kv-delimiter": ":",
+            "key-placeholder": "Enter key",
+            "value-placeholder": "Enter value"
+          }
         }
       ]
     }

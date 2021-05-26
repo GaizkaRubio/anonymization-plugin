@@ -1,0 +1,6 @@
+package org.example.hydrator.plugin.tink.constants;
+
+public class Constants {
+  public static String KEY = "CJ6Q09YFEmQKWAowdHlwZS5nb29nbGVhcGlzLmNvbS9nb29nbGUuY3J5cHRvLnRpbmsuQWVzR2NtS2V5EiIaIJ/K65dz59fB2m/qHY7xnubm6ob2/JEXJkDLOxx7q0hUGAEQARiekNPWBSAB";
+  public static String DETERKEY = "CKSQuKwBEoQBCngKMHR5cGUuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmNyeXB0by50aW5rLkFlc1NpdktleRJCEkDCwP1yIKBD54/kMi9ijYZAgRicJgQimVoUMAGGaPKqs33608DiAEEvMp1z3qCo3oB6QKYrHHbJlxaZq0P5DTriGAEQARikkLisASAB";
+}

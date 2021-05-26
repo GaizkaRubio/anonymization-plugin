@@ -25,8 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static org.example.hydrator.plugin.constants.Constants.AEAD;
+import static org.example.hydrator.plugin.constants.Constants.ENCRYPT;
 
 @Plugin(type = Transform.PLUGIN_TYPE)
 @Name("AnonymizationPlugin")
@@ -36,11 +38,13 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
   private static final Logger LOG = LoggerFactory.getLogger(AnonymizationPlugin.class);
 
   private final AnonymizationConfig config;
+
   private Schema outputSchema;
-  private Map<String, byte[]> keyTypeMap = new HashMap<>();
-  private TinkHelper aeadHelper = new AeadHelper();
-  private BiFunction<byte[], String, Try<byte[]>> encryptFunction;
+  private TinkHelper aeadHelper;
+  private Map<String, String> keyTypeMap;
   private Map<String, String> categoriesConfig;
+  private BiFunction<String, String, Try<byte[]>> encryptFunction;
+
 
   public AnonymizationPlugin(AnonymizationConfig config) {
     this.config = config;
@@ -56,14 +60,19 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
   }
 
   public void initialize(TransformContext context) throws Exception {
-    categoriesConfig = StringUtils.createKeyValuePairs(this.config.getCategoryConfig());
+    this.categoriesConfig = StringUtils.createKeyValuePairs(this.config.getCategoryConfig());
+    this.keyTypeMap = StringUtils.createKeyValuePairs(this.config.getCategoryKeyConfig());
     if (this.config.getEncryptFunction().equals(AEAD)) {
       this.aeadHelper = new AeadHelper();
     } else {
       this.aeadHelper = new DeterAeadHelper();
     }
-    this.encryptFunction = (key, text) -> Try.of(() -> aeadHelper.encrypt(key,text));
-    keyTypeMap.put("prueba", Constants.deterKey.getBytes());
+
+    if (this.config.getAnonymizationMode().equals(ENCRYPT)) {
+      this.encryptFunction = (key, text) -> Try.of(() -> aeadHelper.encrypt(key, text));
+    } else {
+      this.encryptFunction = (key, text) -> Try.of(() -> aeadHelper.decrypt(key, text));
+    }
   }
 
   @Override
@@ -73,12 +82,14 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
     for(Field field : fields) {
       String name = field.getName();
       String value = structuredRecord.get(name);
-      byte[] newValue = value.getBytes();
+      String newValue = value;
       if (this.categoriesConfig.containsKey(name)) {
         String category = this.categoriesConfig.get(name);
-        newValue = this.encryptFunction.apply(keyTypeMap.get(category), value).getOrElse(value.getBytes());
+        byte[] encrypted = this.encryptFunction.apply(keyTypeMap.get(category), value)
+            .getOrElse(newValue.getBytes());
+        newValue = Base64.getEncoder().encodeToString(encrypted);
       }
-      builder.set(name, Base64.getEncoder().encodeToString(newValue));
+      builder.set(name, newValue);
     }
     emitter.emit(builder.build());
   }
