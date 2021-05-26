@@ -13,6 +13,7 @@ import java.util.Base64;
 
 import static org.example.hydrator.plugin.constants.Constants.AEAD;
 import static org.example.hydrator.plugin.constants.Constants.ENCRYPT;
+import static org.example.hydrator.plugin.tink.constants.Constants.KEY;
 
 public class AeadAnonymizationPluginTest {
 
@@ -23,7 +24,9 @@ public class AeadAnonymizationPluginTest {
       Field.of("d", Schema.of(Schema.Type.STRING)),
       Field.of("e", Schema.of(Schema.Type.STRING)));
   private static String categoryMapping = "d:prueba, e:prueba";
-  private static final AnonymizationConfig config = new AnonymizationConfig(INPUT.toString(), ENCRYPT, AEAD, categoryMapping);
+  private static String categoryKey = "prueba:" + KEY;
+  private static final AnonymizationConfig config =
+      new AnonymizationConfig(INPUT.toString(), ENCRYPT, AEAD, categoryMapping, categoryKey);
 
   @Test
   public void testAeadAnonymizationPlugin() throws Exception {
@@ -32,8 +35,8 @@ public class AeadAnonymizationPluginTest {
     MockEmitter<StructuredRecord> emitter = new MockEmitter<>();
     plugin.transform(StructuredRecord.builder(INPUT)
       .set("a", "1").set("b", "2")
-      .set("c", "3").set("d", "test")
-      .set("e", "test").build(), emitter);
+      .set("c", "3").set("d", "ThisIsaTest")
+      .set("e", "ThisIsaTest").build(), emitter);
     StructuredRecord out = emitter.getEmitted().stream().findFirst().get();
     Schema outputSchema = out.getSchema();
     for (Field field : outputSchema.getFields()) {
