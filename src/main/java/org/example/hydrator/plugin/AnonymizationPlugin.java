@@ -32,7 +32,7 @@ import static org.example.hydrator.plugin.constants.Constants.ENCRYPT;
 
 @Plugin(type = Transform.PLUGIN_TYPE)
 @Name("AnonymizationPlugin")
-@Description("A plugin that uses Aead algorithm to anonymise or de-anonymise data.")
+@Description("A plugin that uses Aead algorithm to anonymize or de-anonymize data.")
 public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredRecord> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AnonymizationPlugin.class);
