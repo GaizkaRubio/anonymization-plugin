@@ -9,7 +9,7 @@
     <version>1.0.1-SNAPSHOT</version>
 
     <properties>
-        <cdap.version>6.0.0</cdap.version>
+        <cdap.version>6.4.1</cdap.version>
         <cdap.plugin.version>2.2.0</cdap.plugin.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -19,6 +19,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <!--<repositories>
+        <repository>
+            <id>pentaho</id>
+            <url>https://public.nexus.pentaho.org/repository/proxy-public-3rd-party-release</url>
+        </repository>
+    </repositories>-->
 
     <dependencyManagement>
         <dependencies>
