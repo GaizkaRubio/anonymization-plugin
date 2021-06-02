@@ -26,7 +26,7 @@ public class AeadAnonymizationPluginTest {
   private static String categoryKey = "prueba:" + KEY;
 
   @Test
-  public void testAeadAnonymizationPlugin() throws Exception {
+  public void testAeadEncryptPlugin() throws Exception {
     AnonymizationConfig config =
         new AnonymizationConfig(INPUT.toString(), ENCRYPT, AEAD, categoryMapping, categoryKey);
     AnonymizationPlugin plugin = new AnonymizationPlugin(config);
