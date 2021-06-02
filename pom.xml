@@ -20,13 +20,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <!--<repositories>
-        <repository>
-            <id>pentaho</id>
-            <url>https://public.nexus.pentaho.org/repository/proxy-public-3rd-party-release</url>
-        </repository>
-    </repositories>-->
-
     <dependencyManagement>
         <dependencies>
             <dependency>
