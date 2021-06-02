@@ -86,7 +86,8 @@ public class AnonymizationPlugin extends Transform<StructuredRecord, StructuredR
       if (this.categoriesConfig.containsKey(name)) {
         String category = this.categoriesConfig.get(name);
         byte[] encrypted = this.encryptFunction.apply(keyTypeMap.get(category), value)
-            .getOrElse(newValue.getBytes());
+          .onFailure(e -> LOG.error(e.getMessage(), e))
+          .getOrElse(newValue.getBytes());
         newValue = Base64.getEncoder().encodeToString(encrypted);
       }
       builder.set(name, newValue);

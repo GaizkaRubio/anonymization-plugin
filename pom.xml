@@ -9,7 +9,7 @@
     <version>1.0.1-SNAPSHOT</version>
 
     <properties>
-        <cdap.version>6.0.0</cdap.version>
+        <cdap.version>6.4.1</cdap.version>
         <cdap.plugin.version>2.2.0</cdap.plugin.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
